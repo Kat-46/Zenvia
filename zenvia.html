@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zenvia — Yogurt Bebible para la Relajación</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #7a9e87;
+    --sage-light: #c5dbc9;
+    --sage-pale: #eef4f0;
+    --cocoa: #8b5c3e;
+    --cocoa-light: #d4a98a;
+    --cocoa-pale: #f5ece4;
+    --taro: #8a7aaf;
+    --taro-light: #c9bfe0;
+    --taro-pale: #f0edf8;
+    --cream: #faf8f4;
+    --dark: #2a2a2a;
+    --mid: #5a5a5a;
+    --light: #9a9a9a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--dark); overflow-x: hidden; }
+
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 5vw;
+    background: rgba(250,248,244,0.92); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; color: var(--dark); text-decoration: none; letter-spacing: -0.02em; }
+  nav ul { list-style: none; display: flex; gap: 2rem; }
+  nav ul a { text-decoration: none; font-size: 0.88rem; font-weight: 500; color: var(--mid); letter-spacing: 0.04em; text-transform: uppercase; transition: color 0.2s; }
+  nav ul a:hover { color: var(--dark); }
+
+  .hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; padding: 8rem 5vw 4rem; gap: 4rem; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -20%; right: -10%; width: 60vw; height: 120vh;
+    background: radial-gradient(ellipse, var(--sage-pale) 0%, transparent 70%); pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-block; background: var(--sage-light); color: #2d5a3d;
+    font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.4rem 1rem; border-radius: 100px; margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif; font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 600; line-height: 1.08; letter-spacing: -0.03em; margin-bottom: 1.2rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--sage); }
+  .hero-sub { font-size: 1.1rem; color: var(--mid); line-height: 1.7; max-width: 440px; margin-bottom: 2.5rem; font-weight: 300; }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: var(--dark); color: white; padding: 0.9rem 2rem; border-radius: 100px;
+    font-size: 0.9rem; font-weight: 500; text-decoration: none; transition: transform 0.2s, background 0.2s;
+  }
+  .hero-cta:hover { background: var(--sage); transform: translateY(-2px); }
+  .hero-cta-ghost {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    border: 1px solid rgba(0,0,0,0.2); color: var(--dark); padding: 0.9rem 2rem;
+    border-radius: 100px; font-size: 0.9rem; font-weight: 500; text-decoration: none; margin-left: 1rem; transition: background 0.2s;
+  }
+  .hero-cta-ghost:hover { background: rgba(0,0,0,0.04); }
+
+  .hero-visual { position: relative; display: flex; align-items: center; justify-content: center; }
+  .bottle-showcase { position: relative; width: 340px; height: 480px; margin: 0 auto; }
+  .bottle-main {
+    width: 200px; height: 380px; background: white; border-radius: 30px 30px 40px 40px;
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+    overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    animation: float 5s ease-in-out infinite;
+  }
+  .bottle-label-strip { width: 100%; padding: 1rem; text-align: center; background: var(--sage-pale); }
+  .bottle-label-strip h3 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--dark); margin-bottom: 0.2rem; }
+  .bottle-label-strip p { font-size: 0.72rem; color: var(--mid); text-transform: uppercase; letter-spacing: 0.06em; }
+  .orb { position: absolute; border-radius: 50%; opacity: 0.3; filter: blur(30px); }
+  .orb-1 { width: 200px; height: 200px; background: var(--sage-light); top: -60px; right: -80px; }
+  .orb-2 { width: 150px; height: 150px; background: var(--cocoa-light); bottom: 40px; left: -50px; }
+  .orb-3 { width: 120px; height: 120px; background: var(--taro-light); top: 40px; left: 20px; }
+
+  .stats-bar {
+    background: var(--dark); color: white; padding: 2.5rem 5vw;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; text-align: center;
+  }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 600; color: var(--sage-light); display: block; margin-bottom: 0.3rem; }
+  .stat-label { font-size: 0.82rem; color: rgba(255,255,255,0.55); letter-spacing: 0.04em; }
+
+  .section { padding: 7rem 5vw; }
+  .section-tag { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage); margin-bottom: 1rem; display: block; }
+  .section-h { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 3.5vw, 3.2rem); font-weight: 600; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 1.5rem; max-width: 560px; }
+  .section-p { font-size: 1rem; color: var(--mid); line-height: 1.8; max-width: 560px; font-weight: 300; margin-bottom: 1.5rem; }
+  .science-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+
+  .gaba-card { background: white; border-radius: 24px; padding: 2.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.07); border: 1px solid rgba(0,0,0,0.05); }
+  .gaba-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 0.5rem; color: var(--dark); }
+  .gaba-sub { font-size: 0.82rem; color: var(--light); margin-bottom: 2rem; }
+  .gaba-flow { display: flex; flex-direction: column; gap: 1rem; }
+  .gaba-step { display: flex; align-items: center; gap: 1rem; }
+  .gaba-dot { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 500; flex-shrink: 0; }
+  .gaba-dot.green { background: var(--sage-pale); color: #2d5a3d; }
+  .gaba-dot.taro  { background: var(--taro-pale); color: #4a3a6b; }
+  .gaba-dot.cocoa { background: var(--cocoa-pale); color: #5a2e10; }
+  .gaba-step-text { font-size: 0.88rem; color: var(--mid); line-height: 1.5; }
+  .gaba-step-text strong { color: var(--dark); font-weight: 500; }
+  .gaba-arrow { width: 1px; height: 16px; background: rgba(0,0,0,0.1); margin-left: 17px; }
+
+  .benefits-section { background: var(--sage-pale); padding: 7rem 5vw; }
+  .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 4rem; }
+  .benefit-card { background: white; border-radius: 20px; padding: 2rem; border: 1px solid rgba(0,0,0,0.05); transition: transform 0.2s, box-shadow 0.2s; }
+  .benefit-card:hover { transform: translateY(-4px); box-shadow: 0 20px 50px rgba(0,0,0,0.08); }
+  .benefit-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; font-size: 1.3rem; }
+  .benefit-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.6rem; color: var(--dark); }
+  .benefit-card p { font-size: 0.88rem; color: var(--mid); line-height: 1.7; font-weight: 300; }
+
+  .flavors-section { padding: 7rem 5vw; }
+  .flavors-header { text-align: center; margin-bottom: 4rem; }
+  .flavors-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .flavor-card { border-radius: 28px; padding: 3rem 2rem; text-align: center; cursor: pointer; transition: transform 0.3s; }
+  .flavor-card:hover { transform: scale(1.02); }
+  .flavor-card.natural { background: linear-gradient(135deg, var(--sage-pale) 0%, #d8eedd 100%); border: 1px solid var(--sage-light); }
+  .flavor-card.chocolate { background: linear-gradient(135deg, var(--cocoa-pale) 0%, #f0d3bd 100%); border: 1px solid var(--cocoa-light); }
+  .flavor-card.taro { background: linear-gradient(135deg, var(--taro-pale) 0%, #ddd7f0 100%); border: 1px solid var(--taro-light); }
+  .flavor-emoji { font-size: 3.5rem; display: block; margin-bottom: 1rem; }
+  .flavor-name { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--dark); }
+  .flavor-desc { font-size: 0.88rem; color: var(--mid); line-height: 1.6; font-weight: 300; }
+  .flavor-badge { display: inline-block; margin-top: 1.2rem; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.3rem 0.9rem; border-radius: 100px; }
+  .natural .flavor-badge { background: var(--sage-light); color: #2d5a3d; }
+  .chocolate .flavor-badge { background: var(--cocoa-light); color: #4a1f08; }
+  .taro .flavor-badge { background: var(--taro-light); color: #3d2b6e; }
+
+  .lacto-section { background: var(--dark); color: white; padding: 7rem 5vw; }
+  .lacto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+  .lacto-section .section-tag { color: var(--sage-light); }
+  .lacto-section .section-h { color: white; }
+  .lacto-section .section-p { color: rgba(255,255,255,0.6); }
+  .compare-table { background: rgba(255,255,255,0.04); border-radius: 20px; border: 1px solid rgba(255,255,255,0.08); overflow: hidden; }
+  .compare-row { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 1rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); align-items: center; gap: 1rem; }
+  .compare-row:last-child { border-bottom: none; }
+  .compare-row.header { background: rgba(255,255,255,0.06); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.4); }
+  .compare-row .feature { font-size: 0.88rem; color: rgba(255,255,255,0.7); }
+  .check-yes { color: var(--sage-light); font-size: 1rem; }
+  .check-no { color: rgba(255,255,255,0.2); font-size: 0.85rem; }
+  .col-zenvia { color: var(--sage-light); }
+  .col-other { color: rgba(255,255,255,0.5); }
+
+  .nutrition-section { padding: 7rem 5vw; background: white; }
+  .nutrition-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; align-items: start; }
+  .nutrition-card { background: var(--cream); border-radius: 20px; padding: 2rem; border: 1px solid rgba(0,0,0,0.06); }
+  .nutrition-card h3 { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 1.5rem; color: var(--dark); padding-bottom: 0.8rem; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .nutr-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 0.88rem; }
+  .nutr-row:last-child { border-bottom: none; }
+  .nutr-label { color: var(--mid); }
+  .nutr-val { font-weight: 500; color: var(--dark); }
+  .ingredients-list { font-size: 0.85rem; color: var(--mid); line-height: 1.8; font-weight: 300; }
+  .allergen-note { margin-top: 1rem; padding: 0.8rem 1rem; background: #fff8e6; border-radius: 10px; font-size: 0.82rem; color: #7a5a00; border-left: 3px solid #f0c040; }
+
+  .howto-section { padding: 7rem 5vw; background: var(--taro-pale); }
+  .steps-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; margin-top: 4rem; }
+  .step-card { text-align: center; padding: 1.5rem; }
+  .step-num { width: 48px; height: 48px; border-radius: 50%; background: var(--taro-light); color: #3d2b6e; font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 600; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.2rem; }
+  .step-card h4 { font-size: 0.95rem; font-weight: 500; color: var(--dark); margin-bottom: 0.5rem; }
+  .step-card p { font-size: 0.82rem; color: var(--mid); line-height: 1.6; font-weight: 300; }
+
+  .disclaimer { background: #f5f4f0; padding: 2rem 5vw; text-align: center; }
+  .disclaimer p { font-size: 0.78rem; color: var(--light); max-width: 700px; margin: 0 auto; line-height: 1.7; }
+
+  footer { background: var(--dark); color: white; padding: 4rem 5vw 2rem; display: grid; grid-template-columns: 1fr 2fr; gap: 4rem; }
+  .footer-brand .logo { color: white; }
+  .footer-brand p { font-size: 0.84rem; color: rgba(255,255,255,0.45); margin-top: 1rem; line-height: 1.7; max-width: 240px; }
+  .footer-links { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .footer-col h4 { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.4); margin-bottom: 1rem; }
+  .footer-col ul { list-style: none; }
+  .footer-col ul li { margin-bottom: 0.5rem; }
+  .footer-col ul li a { font-size: 0.88rem; color: rgba(255,255,255,0.65); text-decoration: none; transition: color 0.2s; }
+  .footer-col ul li a:hover { color: white; }
+  .footer-bottom { grid-column: 1 / -1; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,0.3); }
+
+  @keyframes float { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, calc(-50% - 12px)); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+  .hero-content > * { animation: fadeUp 0.7s ease both; }
+  .hero-content > *:nth-child(1) { animation-delay: 0.1s; }
+  .hero-content > *:nth-child(2) { animation-delay: 0.2s; }
+  .hero-content > *:nth-child(3) { animation-delay: 0.3s; }
+  .hero-content > *:nth-child(4) { animation-delay: 0.4s; }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; padding-top: 7rem; }
+    .hero-visual { display: none; }
+    .stats-bar { grid-template-columns: 1fr 1fr; }
+    .science-grid, .lacto-grid, .nutrition-grid { grid-template-columns: 1fr; }
+    .benefits-grid, .flavors-grid { grid-template-columns: 1fr; }
+    .steps-row { grid-template-columns: 1fr 1fr; }
+    footer { grid-template-columns: 1fr; }
+    .footer-links { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="#">Zenvia</a>
+  <ul>
+    <li><a href="#ciencia">Ciencia</a></li>
+    <li><a href="#beneficios">Beneficios</a></li>
+    <li><a href="#sabores">Sabores</a></li>
+    <li><a href="#nutricion">Nutrición</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">Suplemento Alimenticio · 230 mL</span>
+    <h1>Yogurt que te<br>ayuda a <em>relajarte</em><br>de verdad.</h1>
+    <p class="hero-sub">Zenvia es un yogurt bebible enriquecido con <em>Lactobacillus plantarum</em>, la cepa específica que produce GABA en tu intestino y apoya tu sistema nervioso de forma natural.</p>
+    <div>
+      <a href="#sabores" class="hero-cta">Conoce los sabores →</a>
+      <a href="#ciencia" class="hero-cta-ghost">La ciencia</a>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div style="position:absolute;width:100%;height:100%;top:0;left:0;pointer-events:none;">
+      <div class="orb orb-1"></div>
+      <div class="orb orb-2"></div>
+      <div class="orb orb-3"></div>
+    </div>
+    <div class="bottle-showcase">
+      <div class="bottle-main">
+        <div class="bottle-label-strip">
+          <h3>Zenvia</h3>
+          <p>Yogurt bebible · Sabor natural</p>
+          <p style="margin-top:0.5rem;font-size:0.68rem;color:var(--sage);">con Lactobacillus plantarum</p>
+        </div>
+        <div style="padding:1.5rem;text-align:center;">
+          <div style="width:70px;height:70px;background:var(--sage-pale);border-radius:50%;margin:0 auto 0.8rem;display:flex;align-items:center;justify-content:center;font-size:2rem;">🥛</div>
+          <p style="font-size:0.7rem;color:var(--mid);line-height:1.5;">Apoyo natural<br>para la relajación</p>
+          <p style="font-size:0.65rem;color:var(--light);margin-top:1rem;">CONTENIDO NETO 230 mL</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div><span class="stat-num">230</span><span class="stat-label">mL por porción</span></div>
+  <div><span class="stat-num">1</span><span class="stat-label">porción diaria recomendada</span></div>
+  <div><span class="stat-num">3</span><span class="stat-label">sabores únicos</span></div>
+  <div><span class="stat-num">GABA</span><span class="stat-label">producción natural via L. plantarum</span></div>
+</div>
+
+<section class="section science-grid" id="ciencia">
+  <div>
+    <span class="section-tag">La ciencia detrás</span>
+    <h2 class="section-h">El eje intestino-cerebro, activado por fermentación.</h2>
+    <p class="section-p">El ácido gamma-aminobutírico (GABA) es el principal neurotransmisor inhibidor del sistema nervioso central. Niveles adecuados de GABA se asocian con sensación de calma, reducción del estrés y mejor calidad del sueño.</p>
+    <p class="section-p">Lo que diferencia a Zenvia es la cepa <strong>Lactobacillus plantarum</strong>: una bacteria láctica con capacidad demostrada de sintetizar GABA a partir del ácido glutámico durante la fermentación, llegando al intestino de forma activa.</p>
+  </div>
+  <div>
+    <div class="gaba-card">
+      <h3 class="gaba-title">Mecanismo de acción</h3>
+      <p class="gaba-sub">Cómo L. plantarum produce GABA en tu cuerpo</p>
+      <div class="gaba-flow">
+        <div class="gaba-step"><div class="gaba-dot green">1</div><div class="gaba-step-text"><strong>Ingestión</strong> — Consumes Zenvia con L. plantarum vivo y activo</div></div>
+        <div class="gaba-arrow"></div>
+        <div class="gaba-step"><div class="gaba-dot green">2</div><div class="gaba-step-text"><strong>Colonización transitoria</strong> — La bacteria llega al intestino grueso</div></div>
+        <div class="gaba-arrow"></div>
+        <div class="gaba-step"><div class="gaba-dot taro">3</div><div class="gaba-step-text"><strong>Producción de GABA</strong> — L. plantarum convierte ácido glutámico en GABA mediante glutamato descarboxilasa</div></div>
+        <div class="gaba-arrow"></div>
+        <div class="gaba-step"><div class="gaba-dot taro">4</div><div class="gaba-step-text"><strong>Señalización nervio vago</strong> — El GABA intestinal activa el eje intestino-cerebro</div></div>
+        <div class="gaba-arrow"></div>
+        <div class="gaba-step"><div class="gaba-dot cocoa">5</div><div class="gaba-step-text"><strong>Efecto sistémico</strong> — Sensación de calma, reducción de ansiedad leve, apoyo al sueño</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="benefits-section" id="beneficios">
+  <div style="text-align:center;max-width:600px;margin:0 auto;">
+    <span class="section-tag">Beneficios</span>
+    <h2 class="section-h" style="margin:0 auto 1rem;">Todo lo que Zenvia hace por ti</h2>
+    <p class="section-p" style="margin:0 auto;">Como yogurt fermentado de calidad, ofrece los beneficios de cualquier producto lácteo vivo, más el diferenciador único de su cepa probiótica.</p>
+  </div>
+  <div class="benefits-grid">
+    <div class="benefit-card"><div class="benefit-icon" style="background:var(--sage-pale);">🧘</div><h3>Apoyo a la relajación</h3><p>Gracias a la producción de GABA por L. plantarum, Zenvia contribuye a reducir la tensión nerviosa leve y promover un estado de calma natural sin sedación.</p></div>
+    <div class="benefit-card"><div class="benefit-icon" style="background:var(--taro-pale);">🦠</div><h3>Microbiota saludable</h3><p>Contiene cultivos lácticos vivos que apoyan el equilibrio de tu flora intestinal, mejoran la digestión y refuerzan la barrera intestinal.</p></div>
+    <div class="benefit-card"><div class="benefit-icon" style="background:var(--cocoa-pale);">🥛</div><h3>Proteína y calcio</h3><p>Con 7 g de proteína y 265 mg de calcio por porción, Zenvia aporta nutrientes esenciales para músculo y hueso en un formato delicioso y fácil de consumir.</p></div>
+    <div class="benefit-card"><div class="benefit-icon" style="background:var(--sage-pale);">💤</div><h3>Sueño de mejor calidad</h3><p>El GABA desempeña un papel importante en la regulación del ciclo sueño-vigilia. Su consumo habitual puede contribuir a conciliar el sueño con mayor facilidad.</p></div>
+    <div class="benefit-card"><div class="benefit-icon" style="background:var(--taro-pale);">❤️</div><h3>Sistema inmune</h3><p>Los probióticos en Zenvia, incluyendo L. plantarum, estimulan la producción de células inmunes en el tejido linfoide asociado al intestino (GALT).</p></div>
+    <div class="benefit-card"><div class="benefit-icon" style="background:var(--cocoa-pale);">⚡</div><h3>Alerta relajada</h3><p>A diferencia de estimulantes, el mecanismo GABAérgico favorece concentración sin el nerviosismo de la cafeína o exceso de azúcares.</p></div>
+  </div>
+</section>
+
+<section class="flavors-section" id="sabores">
+  <div class="flavors-header">
+    <span class="section-tag">Sabores</span>
+    <h2 class="section-h" style="margin:0.5rem auto 1rem;">Tres personalidades,<br>un mismo beneficio.</h2>
+    <p class="section-p" style="margin:0 auto;">Todos los sabores contienen la misma dosis de L. plantarum activo y la misma fórmula base. Solo cambia el saborizante.</p>
+  </div>
+  <div class="flavors-grid">
+    <div class="flavor-card natural">
+      <span class="flavor-emoji">🥛</span>
+      <div class="flavor-name">Natural</div>
+      <p class="flavor-desc">Sabor limpio y lácteo. La expresión más pura de Zenvia, sin saborizantes artificiales. Ideal para quienes prefieren un perfil neutro y versátil.</p>
+      <span class="flavor-badge">Clásico</span>
+    </div>
+    <div class="flavor-card chocolate">
+      <span class="flavor-emoji">🍫</span>
+      <div class="flavor-name">Chocolate</div>
+      <p class="flavor-desc">Rico y envolvente. La combinación de cacao con el yogurt cremoso crea una experiencia indulgente que nunca pasa de moda.</p>
+      <span class="flavor-badge">Favorito</span>
+    </div>
+    <div class="flavor-card taro">
+      <span class="flavor-emoji">🌿</span>
+      <div class="flavor-name">Taro</div>
+      <p class="flavor-desc">Dulce floral y ligeramente terroso. Perfil aromático único, suave y reconfortante. El favorito de los aventureros del sabor.</p>
+      <span class="flavor-badge">Exclusivo</span>
+    </div>
+  </div>
+</section>
+
+<section class="lacto-section">
+  <div class="lacto-grid">
+    <div>
+      <span class="section-tag">¿Por qué Zenvia?</span>
+      <h2 class="section-h">No todos los yogurts son iguales.</h2>
+      <p class="section-p">La mayoría de yogurts del mercado usan cepas estándar como Lactobacillus bulgaricus o Streptococcus thermophilus, que son excelentes para la digestión pero no producen GABA. L. plantarum es una cepa seleccionada específicamente por su capacidad de síntesis de este neurotransmisor.</p>
+      <p class="section-p">Zenvia es el único yogurt bebible de su categoría que incorpora esta cepa de forma intencional como parte de su formulación.</p>
+    </div>
+    <div>
+      <div class="compare-table">
+        <div class="compare-row header"><span>Característica</span><span class="col-zenvia">Zenvia</span><span class="col-other">Yogurt común</span></div>
+        <div class="compare-row"><span class="feature">Cultivos vivos activos</span><span class="check-yes">✓</span><span style="color:rgba(255,255,255,0.35)">✓</span></div>
+        <div class="compare-row"><span class="feature">Lactobacillus plantarum</span><span class="check-yes">✓</span><span class="check-no">✗</span></div>
+        <div class="compare-row"><span class="feature">Producción de GABA</span><span class="check-yes">✓</span><span class="check-no">✗</span></div>
+        <div class="compare-row"><span class="feature">Apoyo al sistema nervioso</span><span class="check-yes">✓</span><span class="check-no">✗</span></div>
+        <div class="compare-row"><span class="feature">Apoyo digestivo</span><span class="check-yes">✓</span><span style="color:rgba(255,255,255,0.35)">✓</span></div>
+        <div class="compare-row"><span class="feature">Sabor taro exclusivo</span><span class="check-yes">✓</span><span class="check-no">✗</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="nutrition-section" id="nutricion">
+  <span class="section-tag">Información Nutricional</span>
+  <h2 class="section-h">Transparencia total en cada sorbo.</h2>
+  <div class="nutrition-grid">
+    <div class="nutrition-card">
+      <h3>Información nutrimental — por porción (230 mL) / por 100 mL</h3>
+      <div class="nutr-row"><span class="nutr-label">Contenido energético</span><span class="nutr-val">180 kcal · 78 kcal</span></div>
+      <div class="nutr-row"><span class="nutr-label">Proteínas</span><span class="nutr-val">7 g · 3 g</span></div>
+      <div class="nutr-row"><span class="nutr-label">Grasas (lípidos)</span><span class="nutr-val">6 g · 2.6 g</span></div>
+      <div class="nutr-row"><span class="nutr-label">Sodio</span><span class="nutr-val">0.10 g · 0.04 g</span></div>
+      <div class="nutr-row"><span class="nutr-label">Calcio</span><span class="nutr-val">265 mg · 115 mg</span></div>
+    </div>
+    <div>
+      <div class="nutrition-card">
+        <h3>Ingredientes</h3>
+        <p class="ingredients-list">Leche pasteurizada, azúcar, saborizante de taro, leche en polvo, cultivos lácticos, <em>Lactobacillus plantarum</em>, sorbato de potasio (conservador).</p>
+        <div class="allergen-note">⚠️ Alérgenos: Contiene leche y sus derivados.</div>
+      </div>
+      <div class="nutrition-card" style="margin-top:1.5rem;">
+        <h3>Conservación y uso</h3>
+        <p class="ingredients-list">Consérvese en refrigeración. Agítese antes de consumir. Consumir antes de la fecha impresa en la tapa. Una porción al día.</p>
+        <p class="ingredients-list" style="margin-top:0.8rem;">Fabricado en: Conjunto Industrial San Vicente, Jalisco, México.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="howto-section">
+  <div style="text-align:center;max-width:600px;margin:0 auto;">
+    <span class="section-tag">Modo de uso</span>
+    <h2 class="section-h" style="margin:0.5rem auto 1rem;">Simple como debe ser.</h2>
+    <p class="section-p" style="margin:0 auto;">Para obtener el máximo beneficio, incorpora Zenvia a tu rutina diaria. Los efectos de los probióticos son acumulativos con el consumo constante.</p>
+  </div>
+  <div class="steps-row">
+    <div class="step-card"><div class="step-num">1</div><h4>Agita bien</h4><p>Mueve el envase suavemente antes de abrirlo para integrar todos los cultivos activos.</p></div>
+    <div class="step-card"><div class="step-num">2</div><h4>Sirve frío</h4><p>Disfrútalo directamente del refrigerador. La cadena de frío garantiza los cultivos vivos.</p></div>
+    <div class="step-card"><div class="step-num">3</div><h4>Una porción al día</h4><p>230 mL diarios es la dosis recomendada para obtener el beneficio del L. plantarum.</p></div>
+    <div class="step-card"><div class="step-num">4</div><h4>Constancia</h4><p>Los beneficios probióticos se potencian con el consumo regular. Intégralo a tu rutina.</p></div>
+  </div>
+</section>
+
+<div class="disclaimer">
+  <p>El consumo de este producto es responsabilidad de quien lo recomienda y de quien lo usa. <strong>Este producto no es un medicamento.</strong> No está destinado a diagnosticar, tratar, curar ni prevenir ninguna enfermedad. Los beneficios descritos se basan en el respaldo científico disponible sobre L. plantarum y producción de GABA. Consulta a tu médico ante cualquier condición de salud.</p>
+</div>
+
+<footer>
+  <div class="footer-brand">
+    <a class="logo" href="#">Zenvia</a>
+    <p>Apoyo natural para la relajación. Hecho en Jalisco, México.</p>
+  </div>
+  <div class="footer-links">
+    <div class="footer-col">
+      <h4>Producto</h4>
+      <ul>
+        <li><a href="#sabores">Sabores</a></li>
+        <li><a href="#ciencia">La ciencia</a></li>
+        <li><a href="#nutricion">Nutrición</a></li>
+        <li><a href="#beneficios">Beneficios</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="#">Acerca de</a></li>
+        <li><a href="#">Distribuidores</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="#">Aviso de privacidad</a></li>
+        <li><a href="#">Términos de uso</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Zenvia. Todos los derechos reservados.</p>
+    <p>Conjunto Industrial San Vicente, Jalisco, México</p>
+  </div>
+</footer>
+
+</body>
+</html>
